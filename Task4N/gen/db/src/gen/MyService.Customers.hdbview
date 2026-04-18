@@ -1,0 +1,11 @@
+VIEW MyService_Customers AS SELECT
+  Customers_0.customerID,
+  Customers_0.name,
+  Customers_0.email,
+  Customers_0.createdAt,
+  Customers_0.createdBy,
+  Customers_0.readAt,
+  Customers_0.readBy,
+  Customers_0.modifiedAt,
+  Customers_0.modifiedBy
+FROM vehiclemanagement_Customers AS Customers_0

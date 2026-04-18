@@ -1,0 +1,41 @@
+{
+  "format_version": 1,
+  "imports": [
+    {
+      "target_table": "VEHICLEMANAGEMENT_CUSTOMERS",
+      "source_data": {
+        "data_type": "CSV",
+        "file_name": "vehiclemanagement-Customers.csv",
+        "has_header": true,
+        "type_config": {
+          "delimiter": ","
+        }
+      },
+      "import_settings": {
+        "import_columns": [
+          "CUSTOMERID",
+          "NAME",
+          "EMAIL",
+          "CREATEDAT",
+          "CREATEDBY",
+          "READBY",
+          "READAT",
+          "MODIFIEDAT",
+          "MODIFIEDBY"
+        ],
+        "include_filter": []
+      },
+      "column_mappings": {
+        "CUSTOMERID": "customerID",
+        "NAME": "name",
+        "EMAIL": "email",
+        "CREATEDAT": "createdAt",
+        "CREATEDBY": "createdBy",
+        "READBY": "readBy",
+        "READAT": "readAt",
+        "MODIFIEDAT": "modifiedAt",
+        "MODIFIEDBY": "modifiedBy"
+      }
+    }
+  ]
+}

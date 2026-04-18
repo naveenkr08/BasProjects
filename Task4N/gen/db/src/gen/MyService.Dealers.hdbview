@@ -1,0 +1,11 @@
+VIEW MyService_Dealers AS SELECT
+  Dealers_0.dealerID,
+  Dealers_0.dealerName,
+  Dealers_0.location,
+  Dealers_0.createdAt,
+  Dealers_0.createdBy,
+  Dealers_0.readAt,
+  Dealers_0.readBy,
+  Dealers_0.modifiedAt,
+  Dealers_0.modifiedBy
+FROM vehiclemanagement_Dealers AS Dealers_0

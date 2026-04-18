@@ -1,0 +1,13 @@
+COLUMN TABLE vehiclemanagement_Orders (
+  orderID NVARCHAR(36) NOT NULL,
+  quantity INTEGER,
+  createdAt NVARCHAR(5000),
+  createdBy NVARCHAR(5000),
+  readAt NVARCHAR(5000),
+  readBy NVARCHAR(5000),
+  modifiedAt NVARCHAR(5000),
+  modifiedBy NVARCHAR(5000),
+  vehicle_vehicleID NVARCHAR(20),
+  customer_customerID NVARCHAR(36),
+  PRIMARY KEY(orderID)
+)

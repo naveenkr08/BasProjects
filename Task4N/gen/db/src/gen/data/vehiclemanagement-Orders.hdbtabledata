@@ -1,0 +1,43 @@
+{
+  "format_version": 1,
+  "imports": [
+    {
+      "target_table": "VEHICLEMANAGEMENT_ORDERS",
+      "source_data": {
+        "data_type": "CSV",
+        "file_name": "vehiclemanagement-Orders.csv",
+        "has_header": true,
+        "type_config": {
+          "delimiter": ","
+        }
+      },
+      "import_settings": {
+        "import_columns": [
+          "ORDERID",
+          "QUANTITY",
+          "VEHICLE_VEHICLEID",
+          "CUSTOMER_CUSTOMERID",
+          "CREATEDAT",
+          "CREATEDBY",
+          "READBY",
+          "READAT",
+          "MODIFIEDAT",
+          "MODIFIEDBY"
+        ],
+        "include_filter": []
+      },
+      "column_mappings": {
+        "ORDERID": "orderID",
+        "QUANTITY": "quantity",
+        "VEHICLE_VEHICLEID": "vehicle_vehicleID",
+        "CUSTOMER_CUSTOMERID": "customer_customerID",
+        "CREATEDAT": "createdAt",
+        "CREATEDBY": "createdBy",
+        "READBY": "readBy",
+        "READAT": "readAt",
+        "MODIFIEDAT": "modifiedAt",
+        "MODIFIEDBY": "modifiedBy"
+      }
+    }
+  ]
+}

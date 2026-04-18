@@ -1,0 +1,5 @@
+vehicleID,modelName,oldPrice,newPrice,statuss,createdAt,createdBy,readBy,readAt,modifiedAt,modifiedBy,state_stateId,dealer_dealerID
+TN8047,XUV,2400000,2600000,Pending,,,,,,,s111,550e8400-e29b-41d4-a716-446655440001
+KA8131,Mustang,7200000,7600000,Pending,,,,,,,s222,550e8400-e29b-41d4-a716-446655440003
+TN8048,XUV 5X,2400000,2600000,Pending,,,,,,,s111,550e8400-e29b-41d4-a716-446655440002
+KA8108,Model X,2400000,2600000,Pending,,,,,,,s222,550e8400-e29b-41d4-a716-446655440004

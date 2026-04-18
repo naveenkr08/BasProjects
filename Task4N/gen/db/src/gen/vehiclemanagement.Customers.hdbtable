@@ -1,0 +1,12 @@
+COLUMN TABLE vehiclemanagement_Customers (
+  customerID NVARCHAR(36) NOT NULL,
+  name NVARCHAR(100),
+  email NVARCHAR(100),
+  createdAt NVARCHAR(5000),
+  createdBy NVARCHAR(5000),
+  readAt NVARCHAR(5000),
+  readBy NVARCHAR(5000),
+  modifiedAt NVARCHAR(5000),
+  modifiedBy NVARCHAR(5000),
+  PRIMARY KEY(customerID)
+)

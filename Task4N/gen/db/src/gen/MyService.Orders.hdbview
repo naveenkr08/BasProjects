@@ -1,0 +1,12 @@
+VIEW MyService_Orders AS SELECT
+  Orders_0.orderID,
+  Orders_0.quantity,
+  Orders_0.createdAt,
+  Orders_0.createdBy,
+  Orders_0.readAt,
+  Orders_0.readBy,
+  Orders_0.modifiedAt,
+  Orders_0.modifiedBy,
+  Orders_0.vehicle_vehicleID,
+  Orders_0.customer_customerID
+FROM vehiclemanagement_Orders AS Orders_0

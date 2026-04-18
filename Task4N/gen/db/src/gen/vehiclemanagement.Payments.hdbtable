@@ -1,0 +1,13 @@
+COLUMN TABLE vehiclemanagement_Payments (
+  paymentID NVARCHAR(36) NOT NULL,
+  amount DECIMAL(15, 2),
+  paymentDate DATE,
+  createdAt NVARCHAR(5000),
+  createdBy NVARCHAR(5000),
+  readAt NVARCHAR(5000),
+  readBy NVARCHAR(5000),
+  modifiedAt NVARCHAR(5000),
+  modifiedBy NVARCHAR(5000),
+  order_orderID NVARCHAR(36),
+  PRIMARY KEY(paymentID)
+)

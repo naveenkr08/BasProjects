@@ -1,0 +1,3 @@
+VIEW MyService_Vehicles AS SELECT
+  Vehiclesdata_0.vehicleID
+FROM MyService_Vehiclesdata AS Vehiclesdata_0

@@ -1,0 +1,12 @@
+COLUMN TABLE vehiclemanagement_Dealers (
+  dealerID NVARCHAR(36) NOT NULL,
+  dealerName NVARCHAR(100),
+  location NVARCHAR(100),
+  createdAt NVARCHAR(5000),
+  createdBy NVARCHAR(5000),
+  readAt NVARCHAR(5000),
+  readBy NVARCHAR(5000),
+  modifiedAt NVARCHAR(5000),
+  modifiedBy NVARCHAR(5000),
+  PRIMARY KEY(dealerID)
+)

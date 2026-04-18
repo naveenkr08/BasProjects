@@ -1,0 +1,40 @@
+{
+  "requires": {
+    "[hybrid]": {
+      "MAP_API": {
+        "kind": "rest",
+        "credentials": {
+          "destination": "MAP_API"
+        }
+      },
+      "destinations": {
+        "binding": {
+          "type": "cf",
+          "apiEndpoint": "https://api.cf.us10-001.hana.ondemand.com",
+          "org": "c58cc7detrial",
+          "space": "dev",
+          "instance": "MAP_API-destination",
+          "key": "MAP_API-key"
+        },
+        "kind": "destinations",
+        "vcap": {
+          "name": "destinations"
+        }
+      },
+      "db": {
+        "binding": {
+          "type": "cf",
+          "apiEndpoint": "https://api.cf.us10-001.hana.ondemand.com",
+          "org": "c58cc7detrial",
+          "space": "dev",
+          "instance": "Task4N-db",
+          "key": "Task4N-db-key"
+        },
+        "kind": "hana",
+        "vcap": {
+          "name": "db"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+VIEW MyService_States AS SELECT
+  Statedata_0.stateName
+FROM MyService_Statedata AS Statedata_0

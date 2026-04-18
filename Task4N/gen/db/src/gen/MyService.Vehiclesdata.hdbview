@@ -1,0 +1,15 @@
+VIEW MyService_Vehiclesdata AS SELECT
+  Vehicles_0.vehicleID,
+  Vehicles_0.modelName,
+  Vehicles_0.oldPrice,
+  Vehicles_0.newPrice,
+  Vehicles_0.statuss,
+  Vehicles_0.createdAt,
+  Vehicles_0.createdBy,
+  Vehicles_0.readAt,
+  Vehicles_0.readBy,
+  Vehicles_0.modifiedAt,
+  Vehicles_0.modifiedBy,
+  Vehicles_0.state_stateId,
+  Vehicles_0.dealer_dealerID
+FROM vehiclemanagement_Vehicles AS Vehicles_0

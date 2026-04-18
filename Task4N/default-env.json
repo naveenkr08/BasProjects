@@ -1,0 +1,9 @@
+{
+  "destinations": [
+    {
+      "name": "MAP_API",
+      "url": "https://c58cc7detrial-dev-mapapp-srv.cfapps.us10-001.hana.ondemand.com",
+      "authentication": "NoAuthentication"
+    }
+  ]
+}

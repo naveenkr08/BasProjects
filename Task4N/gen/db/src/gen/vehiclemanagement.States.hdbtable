@@ -1,0 +1,13 @@
+COLUMN TABLE vehiclemanagement_States (
+  stateId NVARCHAR(10) NOT NULL,
+  stateName NVARCHAR(100),
+  country NVARCHAR(50),
+  stateCode NVARCHAR(5000),
+  createdAt NVARCHAR(5000),
+  createdBy NVARCHAR(5000),
+  readAt NVARCHAR(5000),
+  readBy NVARCHAR(5000),
+  modifiedAt NVARCHAR(5000),
+  modifiedBy NVARCHAR(5000),
+  PRIMARY KEY(stateId)
+)

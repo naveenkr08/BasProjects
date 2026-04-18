@@ -1,0 +1,12 @@
+VIEW MyService_Statedata AS SELECT
+  States_0.stateId,
+  States_0.stateName,
+  States_0.country,
+  States_0.stateCode,
+  States_0.createdAt,
+  States_0.createdBy,
+  States_0.readAt,
+  States_0.readBy,
+  States_0.modifiedAt,
+  States_0.modifiedBy
+FROM vehiclemanagement_States AS States_0
