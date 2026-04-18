@@ -1,0 +1,7 @@
+COLUMN TABLE auth_db_Products (
+  productID NVARCHAR(36) NOT NULL,
+  productName NVARCHAR(100),
+  price DECIMAL(10, 2),
+  category NVARCHAR(50),
+  PRIMARY KEY(productID)
+)

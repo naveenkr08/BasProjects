@@ -1,0 +1,48 @@
+{
+  "xsappname": "auth-app",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.authenticated-user",
+      "description": "Authenticated user scope"
+    },
+    {
+      "name": "$XSAPPNAME.admin",
+      "description": "Admin scope"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "authenticated-user",
+      "description": "Authenticated user role",
+      "scope-references": [
+        "$XSAPPNAME.authenticated-user"
+      ]
+    },
+    {
+      "name": "admin",
+      "description": "Admin role",
+      "scope-references": [
+        "$XSAPPNAME.admin"
+      ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "auth-app-admin",
+      "description": "Admin role collection",
+      "role-template-references": [
+        "$XSAPPNAME.admin",
+        "$XSAPPNAME.authenticated-user"
+      ]
+    },
+    {
+      "name": "auth-app-user",
+      "description": "User role collection",
+      "role-template-references": [
+        "$XSAPPNAME.authenticated-user"
+      ]
+    }
+  ],
+  "attributes": []
+}

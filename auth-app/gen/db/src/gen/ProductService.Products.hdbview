@@ -1,0 +1,6 @@
+VIEW ProductService_Products AS SELECT
+  Products_0.productID,
+  Products_0.productName,
+  Products_0.price,
+  Products_0.category
+FROM auth_db_Products AS Products_0

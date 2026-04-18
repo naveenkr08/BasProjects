@@ -1,0 +1,52 @@
+{
+  "name": "auth-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "@cap-js/hana": "^2",
+    "@sap-cloud-sdk/connectivity": "^4.5.1",
+    "@sap-cloud-sdk/http-client": "^4.5.1",
+    "@sap/cds": "^9.8.4",
+    "@sap/hana-client": "^2.28.19",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^9.8.2"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana"
+      },
+      "auth": {
+        "kind": "basic",
+        "users": {
+          "admin": {
+            "password": "admin123",
+            "roles": [
+              "authenticated-user",
+              "admin"
+            ]
+          },
+          "user1": {
+            "password": "user123",
+            "roles": [
+              "authenticated-user"
+            ]
+          }
+        }
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana"
+        },
+        "auth": {
+          "kind": "xsuaa"
+        }
+      }
+    }
+  }
+}
