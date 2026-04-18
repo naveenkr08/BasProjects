@@ -1,0 +1,3 @@
+vehicle_ID,modelname,baseprice,price,state,status,dealer_ID
+KA_1001,BMW X5,5000000,5500000,TN,Approved,1
+TN_1002,Audi Q7,6000000,6900000,KA,Pending,2
