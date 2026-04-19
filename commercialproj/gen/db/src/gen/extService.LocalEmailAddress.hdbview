@@ -1,0 +1,7 @@
+VIEW extService_LocalEmailAddress AS SELECT
+  EmailAddress_0.AddressID,
+  EmailAddress_0.Person,
+  EmailAddress_0.OrdinalNumber,
+  EmailAddress_0.EmailAddress,
+  EmailAddress_0.IsDefaultEmailAddress
+FROM demo_EmailAddress AS EmailAddress_0

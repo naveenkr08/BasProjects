@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="extService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="LocalEmailAddress" EntityType="extService.LocalEmailAddress"/>
+        <EntitySet Name="Users" EntityType="extService.Users"/>
+        <EntitySet Name="ExternalEmailAddress" EntityType="extService.ExternalEmailAddress"/>
+        <FunctionImport Name="TransferData" Function="extService.TransferData"/>
+        <FunctionImport Name="GetUserWithEmail" Function="extService.GetUserWithEmail"/>
+      </EntityContainer>
+      <EntityType Name="LocalEmailAddress">
+        <Key>
+          <PropertyRef Name="AddressID"/>
+          <PropertyRef Name="Person"/>
+          <PropertyRef Name="OrdinalNumber"/>
+        </Key>
+        <Property Name="AddressID" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Person" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="OrdinalNumber" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="EmailAddress" Type="Edm.String" MaxLength="241"/>
+        <Property Name="IsDefaultEmailAddress" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="Users">
+        <Key>
+          <PropertyRef Name="userId"/>
+        </Key>
+        <Property Name="userId" Type="Edm.String" Nullable="false"/>
+        <Property Name="name" Type="Edm.String"/>
+        <Property Name="email" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="ExternalEmailAddress">
+        <Key>
+          <PropertyRef Name="AddressID"/>
+          <PropertyRef Name="Person"/>
+          <PropertyRef Name="OrdinalNumber"/>
+        </Key>
+        <Property Name="AddressID" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Person" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="OrdinalNumber" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="IsDefaultEmailAddress" Type="Edm.Boolean"/>
+        <Property Name="EmailAddress" Type="Edm.String" MaxLength="241"/>
+        <Property Name="SearchEmailAddress" Type="Edm.String" MaxLength="20"/>
+        <Property Name="AddressCommunicationRemarkText" Type="Edm.String" MaxLength="50"/>
+      </EntityType>
+      <ComplexType Name="UserWithEmail">
+        <Property Name="userId" Type="Edm.String"/>
+        <Property Name="name" Type="Edm.String"/>
+        <Property Name="email" Type="Edm.String"/>
+        <Property Name="emailAddress" Type="Edm.String"/>
+        <Property Name="isDefault" Type="Edm.Boolean"/>
+      </ComplexType>
+      <Function Name="TransferData" IsBound="false" IsComposable="false">
+        <ReturnType Type="Edm.String"/>
+      </Function>
+      <Function Name="GetUserWithEmail" IsBound="false" IsComposable="false">
+        <Parameter Name="userId" Type="Edm.String"/>
+        <ReturnType Type="extService.UserWithEmail"/>
+      </Function>
+      <Annotations Target="extService.GetUserWithEmail(Edm.String)/userId">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

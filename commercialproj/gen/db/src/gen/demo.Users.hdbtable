@@ -1,0 +1,6 @@
+COLUMN TABLE demo_Users (
+  userId NVARCHAR(5000) NOT NULL,
+  name NVARCHAR(5000),
+  email NVARCHAR(5000),
+  PRIMARY KEY(userId)
+)

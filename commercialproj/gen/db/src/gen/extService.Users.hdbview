@@ -1,0 +1,5 @@
+VIEW extService_Users AS SELECT
+  Users_0.userId,
+  Users_0.name,
+  Users_0.email
+FROM demo_Users AS Users_0
