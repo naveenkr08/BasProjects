@@ -1,0 +1,11 @@
+COLUMN TABLE zentra_Orders (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  customer NVARCHAR(111),
+  status NVARCHAR(20) DEFAULT 'pending',
+  totalAmount DECIMAL(9, 2),
+  PRIMARY KEY(ID)
+)

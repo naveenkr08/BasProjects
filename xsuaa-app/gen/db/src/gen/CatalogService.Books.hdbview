@@ -1,0 +1,11 @@
+VIEW CatalogService_Books AS SELECT
+  Books_0.ID,
+  Books_0.createdAt,
+  Books_0.createdBy,
+  Books_0.modifiedAt,
+  Books_0.modifiedBy,
+  Books_0.title,
+  Books_0.descr,
+  Books_0.stock,
+  Books_0.price
+FROM zentra_Books AS Books_0

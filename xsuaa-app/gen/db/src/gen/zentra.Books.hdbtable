@@ -1,0 +1,12 @@
+COLUMN TABLE zentra_Books (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  title NVARCHAR(111),
+  descr NVARCHAR(1111),
+  stock INTEGER,
+  price DECIMAL(9, 2),
+  PRIMARY KEY(ID)
+)
