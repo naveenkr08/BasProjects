@@ -1,0 +1,34 @@
+{
+  "requires": {
+    "[hybrid]": {
+      "db": {
+        "binding": {
+          "type": "cf",
+          "apiEndpoint": "https://api.cf.us10-001.hana.ondemand.com",
+          "org": "c58cc7detrial",
+          "space": "dev",
+          "instance": "mapapp-db",
+          "key": "mapapp-db-key"
+        },
+        "kind": "hana",
+        "vcap": {
+          "name": "db"
+        }
+      },
+      "destinations": {
+        "binding": {
+          "type": "cf",
+          "apiEndpoint": "https://api.cf.us10-001.hana.ondemand.com",
+          "org": "c58cc7detrial",
+          "space": "dev",
+          "instance": "LocationIQ_API-destination",
+          "key": "LocationIQ_API-destination-key"
+        },
+        "kind": "destinations",
+        "vcap": {
+          "name": "destinations"
+        }
+      }
+    }
+  }
+}

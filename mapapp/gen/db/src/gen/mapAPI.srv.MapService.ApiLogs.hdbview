@@ -1,0 +1,5 @@
+VIEW mapAPI_srv_MapService_ApiLogs AS SELECT
+  ApiLogs_0.logID,
+  ApiLogs_0.functionName,
+  ApiLogs_0.calledAt
+FROM hello_ApiLogs AS ApiLogs_0

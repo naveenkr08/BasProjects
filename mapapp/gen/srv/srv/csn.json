@@ -1,0 +1,248 @@
+{
+  "namespace": "hello",
+  "definitions": {
+    "hello.ApiLogs": {
+      "kind": "entity",
+      "elements": {
+        "logID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "functionName": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "calledAt": {
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "mapAPI.srv.MapService": {
+      "@source": "srv/service.cds",
+      "kind": "service"
+    },
+    "mapAPI.srv.MapService.ApiLogs": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "hello.ApiLogs"
+          ]
+        }
+      },
+      "elements": {
+        "logID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "functionName": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "calledAt": {
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.Locations": {
+      "kind": "type",
+      "elements": {
+        "latitude": {
+          "type": "cds.Decimal",
+          "precision": 9,
+          "scale": 6
+        },
+        "longitude": {
+          "type": "cds.Decimal",
+          "precision": 9,
+          "scale": 6
+        },
+        "address": {
+          "type": "cds.String"
+        },
+        "location": {
+          "type": "cds.String"
+        },
+        "district": {
+          "type": "cds.String"
+        },
+        "state": {
+          "type": "cds.String"
+        },
+        "pincode": {
+          "type": "cds.String"
+        },
+        "country": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.LatAndLong": {
+      "kind": "type",
+      "elements": {
+        "latitude": {
+          "type": "cds.String"
+        },
+        "longitude": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.District": {
+      "kind": "type",
+      "elements": {
+        "name": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.City": {
+      "kind": "type",
+      "elements": {
+        "name": {
+          "type": "cds.String"
+        },
+        "pincode": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.Village": {
+      "kind": "type",
+      "elements": {
+        "name": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.getDistricts": {
+      "kind": "function",
+      "params": {
+        "state": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "items": {
+          "type": "mapAPI.srv.MapService.District"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.getlatitudeAndLongitude": {
+      "kind": "function",
+      "params": {
+        "cityname": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "type": "mapAPI.srv.MapService.LatAndLong"
+      }
+    },
+    "mapAPI.srv.MapService.getLocationInDetail": {
+      "kind": "function",
+      "params": {
+        "address": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "type": "mapAPI.srv.MapService.Locations"
+      }
+    },
+    "mapAPI.srv.MapService.getAddressFromCoordinates": {
+      "kind": "function",
+      "params": {
+        "latitude": {
+          "type": "cds.Decimal"
+        },
+        "longitude": {
+          "type": "cds.Decimal"
+        }
+      },
+      "returns": {
+        "type": "mapAPI.srv.MapService.Locations"
+      }
+    },
+    "mapAPI.srv.MapService.getCitiesByDistrict": {
+      "kind": "function",
+      "params": {
+        "district": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "items": {
+          "type": "mapAPI.srv.MapService.City"
+        }
+      }
+    },
+    "mapAPI.srv.MapService.getVillagesByDistrict": {
+      "kind": "function",
+      "params": {
+        "district": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "items": {
+          "type": "mapAPI.srv.MapService.Village"
+        }
+      }
+    },
+    "cds.outbox.Messages": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "timestamp": {
+          "type": "cds.Timestamp"
+        },
+        "target": {
+          "type": "cds.String"
+        },
+        "msg": {
+          "type": "cds.LargeString"
+        },
+        "attempts": {
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "partition": {
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "lastError": {
+          "type": "cds.LargeString"
+        },
+        "lastAttemptTimestamp": {
+          "type": "cds.Timestamp"
+        },
+        "status": {
+          "type": "cds.String",
+          "length": 23
+        },
+        "task": {
+          "type": "cds.String",
+          "length": 255
+        },
+        "appid": {
+          "type": "cds.String",
+          "length": 255
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v6.8.0",
+    "compilerCsnFlavor": "inferred",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}

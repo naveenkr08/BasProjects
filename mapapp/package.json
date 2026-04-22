@@ -1,0 +1,46 @@
+{
+  "name": "mapapp",
+  "version": "1.0.0",
+  "dependencies": {
+    "@cap-js/hana": "^2.7.0",
+    "@sap-cloud-sdk/http-client": "^4.5.1",
+    "@sap/cds": "^9.8.3",
+    "@sap/xssec": "^4",
+    
+    "dotenv": "^17.3.1"
+    
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^9.8.2"
+  },
+  "scripts": {
+    "start": "npx cds-serve"
+  },
+  "cds": {
+     "server": {
+      "static": "app"        
+    },
+    "requires": {
+      "db": {
+        "kind": "hana"
+      },
+      "auth": {
+        "kind": "dummy"
+      },
+      "[production]": {
+        "auth": {
+          "kind": "dummy"
+        },
+        "db": {
+          "kind": "hana"
+        },
+         "LocationIQ_API": {
+          "kind": "rest",
+          "credentials": {
+            "destination": "LocationIQ_API"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+COLUMN TABLE hello_ApiLogs (
+  logID NVARCHAR(36) NOT NULL,
+  functionName NVARCHAR(100),
+  calledAt SECONDDATE,
+  PRIMARY KEY(logID)
+)

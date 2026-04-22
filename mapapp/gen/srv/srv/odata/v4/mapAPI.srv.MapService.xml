@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="mapAPI.srv.MapService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="ApiLogs" EntityType="mapAPI.srv.MapService.ApiLogs"/>
+        <FunctionImport Name="getDistricts" Function="mapAPI.srv.MapService.getDistricts"/>
+        <FunctionImport Name="getlatitudeAndLongitude" Function="mapAPI.srv.MapService.getlatitudeAndLongitude"/>
+        <FunctionImport Name="getLocationInDetail" Function="mapAPI.srv.MapService.getLocationInDetail"/>
+        <FunctionImport Name="getAddressFromCoordinates" Function="mapAPI.srv.MapService.getAddressFromCoordinates"/>
+        <FunctionImport Name="getCitiesByDistrict" Function="mapAPI.srv.MapService.getCitiesByDistrict"/>
+        <FunctionImport Name="getVillagesByDistrict" Function="mapAPI.srv.MapService.getVillagesByDistrict"/>
+      </EntityContainer>
+      <EntityType Name="ApiLogs">
+        <Key>
+          <PropertyRef Name="logID"/>
+        </Key>
+        <Property Name="logID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="functionName" Type="Edm.String" MaxLength="100"/>
+        <Property Name="calledAt" Type="Edm.DateTimeOffset"/>
+      </EntityType>
+      <ComplexType Name="Locations">
+        <Property Name="latitude" Type="Edm.Decimal" Precision="9" Scale="6"/>
+        <Property Name="longitude" Type="Edm.Decimal" Precision="9" Scale="6"/>
+        <Property Name="address" Type="Edm.String"/>
+        <Property Name="location" Type="Edm.String"/>
+        <Property Name="district" Type="Edm.String"/>
+        <Property Name="state" Type="Edm.String"/>
+        <Property Name="pincode" Type="Edm.String"/>
+        <Property Name="country" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="LatAndLong">
+        <Property Name="latitude" Type="Edm.String"/>
+        <Property Name="longitude" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="District">
+        <Property Name="name" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="City">
+        <Property Name="name" Type="Edm.String"/>
+        <Property Name="pincode" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="Village">
+        <Property Name="name" Type="Edm.String"/>
+      </ComplexType>
+      <Function Name="getDistricts" IsBound="false" IsComposable="false">
+        <Parameter Name="state" Type="Edm.String"/>
+        <ReturnType Type="Collection(mapAPI.srv.MapService.District)" Nullable="true"/>
+      </Function>
+      <Function Name="getlatitudeAndLongitude" IsBound="false" IsComposable="false">
+        <Parameter Name="cityname" Type="Edm.String"/>
+        <ReturnType Type="mapAPI.srv.MapService.LatAndLong"/>
+      </Function>
+      <Function Name="getLocationInDetail" IsBound="false" IsComposable="false">
+        <Parameter Name="address" Type="Edm.String"/>
+        <ReturnType Type="mapAPI.srv.MapService.Locations"/>
+      </Function>
+      <Function Name="getAddressFromCoordinates" IsBound="false" IsComposable="false">
+        <Parameter Name="latitude" Type="Edm.Decimal" Scale="variable"/>
+        <Parameter Name="longitude" Type="Edm.Decimal" Scale="variable"/>
+        <ReturnType Type="mapAPI.srv.MapService.Locations"/>
+      </Function>
+      <Function Name="getCitiesByDistrict" IsBound="false" IsComposable="false">
+        <Parameter Name="district" Type="Edm.String"/>
+        <ReturnType Type="Collection(mapAPI.srv.MapService.City)" Nullable="true"/>
+      </Function>
+      <Function Name="getVillagesByDistrict" IsBound="false" IsComposable="false">
+        <Parameter Name="district" Type="Edm.String"/>
+        <ReturnType Type="Collection(mapAPI.srv.MapService.Village)" Nullable="true"/>
+      </Function>
+      <Annotations Target="mapAPI.srv.MapService.ApiLogs/logID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getDistricts(Edm.String)/state">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getlatitudeAndLongitude(Edm.String)/cityname">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getLocationInDetail(Edm.String)/address">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getAddressFromCoordinates(Edm.Decimal,Edm.Decimal)/latitude">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getAddressFromCoordinates(Edm.Decimal,Edm.Decimal)/longitude">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getCitiesByDistrict(Edm.String)/district">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="mapAPI.srv.MapService.getVillagesByDistrict(Edm.String)/district">
+        <Annotation Term="Core.OptionalParameter">
+          <Record Type="Core.OptionalParameterType"/>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

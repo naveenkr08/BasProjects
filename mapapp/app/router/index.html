@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map Service</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green: #1D9E75;
+      --green-dark: #0F6E56;
+      --green-light: #E1F5EE;
+      --green-mid: #9FE1CB;
+      --bg: #F7F8F6;
+      --surface: #FFFFFF;
+      --border: #E8EAE6;
+      --text: #1A1F1C;
+      --muted: #6B7A72;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; color: var(--text); }
+    .logo-icon { width: 34px; height: 34px; background: var(--green); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-icon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; }
+    .btn-map { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; background: var(--green); color: #fff; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .btn-map:hover { background: var(--green-dark); }
+    .btn-map:active { transform: scale(0.97); }
+    .btn-map svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; }
+    .hero { background: linear-gradient(135deg, #0F6E56 0%, #1D9E75 60%, #5DCAA5 100%); color: #fff; padding: 4rem 2rem; text-align: center; }
+    .hero h1 { font-size: 40px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.5px; }
+    .hero p { font-size: 16px; opacity: 0.85; max-width: 480px; margin: 0 auto 2rem; line-height: 1.6; }
+    .stats { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .stat-num { font-size: 32px; font-weight: 600; }
+    .stat-label { font-size: 13px; opacity: 0.75; margin-top: 2px; }
+    .main { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); margin-bottom: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; transition: box-shadow 0.2s; }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
+    .card-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--green-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .card-icon svg { width: 18px; height: 18px; stroke: var(--green); fill: none; stroke-width: 2; }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text); }
+    .card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+    .form-group { margin-bottom: 12px; }
+    label { font-size: 12px; font-weight: 500; color: var(--muted); display: block; margin-bottom: 5px; }
+    input[type="text"], input[type="number"] { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.12); background: #fff; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+    .btn:hover { background: var(--bg); }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+    .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+    .btn-full { width: 100%; justify-content: center; margin-top: 12px; }
+    .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .result { margin-top: 14px; display: none; animation: fadeIn 0.2s ease; }
+    .result.show { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .result-item { background: var(--bg); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .result-item-label { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .result-item-value { font-size: 14px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
+    .result-address { background: var(--bg); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .view-map-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 7px 14px; background: var(--green-light); color: var(--green-dark); border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; font-family: 'DM Sans', sans-serif; }
+    .view-map-btn:hover { background: var(--green-mid); }
+    .view-map-btn svg { width: 13px; height: 13px; stroke: var(--green-dark); fill: none; stroke-width: 2; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip { padding: 5px 12px; border-radius: 20px; font-size: 13px; background: var(--green-light); color: var(--green-dark); font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+    .chip-pin { font-family: 'DM Mono', monospace; font-size: 11px; opacity: 0.7; }
+    .chips-count { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .loading { display: none; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+    .loading.show { display: flex; }
+    .spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-msg { margin-top: 10px; padding: 10px 12px; background: #FCEBEB; border-radius: var(--radius-sm); font-size: 13px; color: #A32D2D; display: none; }
+    .error-msg.show { display: block; }
+    @media (max-width: 540px) {
+      .hero h1 { font-size: 28px; }
+      .form-row { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: 1fr; }
+      .stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    MapService
+  </div>
+  <button class="btn-map" onclick="openMap()">
+    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Open Map
+  </button>
+</nav>
+
+<div class="hero">
+  <h1>Location Intelligence</h1>
+  <p>Search coordinates, address details, districts, cities and villages powered by LocationIQ and India Post APIs.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">API Functions</div></div>
+    <div class="stat"><div class="stat-num">28</div><div class="stat-label">Indian States</div></div>
+    <div class="stat"><div class="stat-num">700+</div><div class="stat-label">Districts</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <p class="section-label">Coordinate APIs</p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Get Latitude & Longitude</div>
+        <div class="card-sub">getlatitudeAndLongitude(cityname)</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>City Name</label>
+      <input type="text" id="cityname" placeholder="e.g. Bangalore, Mumbai, Chennai" onkeydown="if(event.key==='Enter') getLatLon()"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="getLatLon()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search Coordinates
+    </button>
+    <div class="loading" id="latlon-loading"><div class="spinner"></div> Fetching coordinates...</div>
+    <div class="error-msg" id="latlon-error"></div>
+    <div class="result" id="latlon-result"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Get Location in Detail</div>
+        <div class="card-sub">getLocationInDetail(address)</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Full Address</label>
+      <input type="text" id="address" placeholder="e.g. MG Road, Bangalore" onkeydown="if(event.key==='Enter') getLocationDetail()"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="getLocationDetail()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search Address
+    </button>
+    <div class="loading" id="detail-loading"><div class="spinner"></div> Fetching details...</div>
+    <div class="error-msg" id="detail-error"></div>
+    <div class="result" id="detail-result"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Get Address from Coordinates</div>
+        <div class="card-sub">getAddressFromCoordinates(latitude, longitude)</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Latitude</label>
+        <input type="number" id="lat" placeholder="e.g. 12.9716" step="0.0001"/>
+      </div>
+      <div class="form-group">
+        <label>Longitude</label>
+        <input type="number" id="lon" placeholder="e.g. 77.5946" step="0.0001"/>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="getFromCoords()">
+      <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      Reverse Geocode
+    </button>
+    <div class="loading" id="coord-loading"><div class="spinner"></div> Fetching address...</div>
+    <div class="error-msg" id="coord-error"></div>
+    <div class="result" id="coord-result"></div>
+  </div>
+
+  <p class="section-label" style="margin-top:2rem">District & City APIs</p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Get Districts by State</div>
+        <div class="card-sub">getDistricts(state)</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>State Name</label>
+      <input type="text" id="statename" placeholder="e.g. Karnataka, Maharashtra, Tamil Nadu" onkeydown="if(event.key==='Enter') getDistricts()"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="getDistricts()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Get Districts
+    </button>
+    <div class="loading" id="district-loading"><div class="spinner"></div> Fetching districts...</div>
+    <div class="error-msg" id="district-error"></div>
+    <div class="result" id="district-result"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Get Cities by District</div>
+        <div class="card-sub">getCitiesByDistrict(district)</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>District Name</label>
+      <input type="text" id="districtname" placeholder="e.g. Mysore, Pune, Coimbatore" onkeydown="if(event.key==='Enter') getCities()"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="getCities()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Get Cities
+    </button>
+    <div class="loading" id="city-loading"><div class="spinner"></div> Fetching cities...</div>
+    <div class="error-msg" id="city-error"></div>
+    <div class="result" id="city-result"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Get Villages by District</div>
+        <div class="card-sub">getVillagesByDistrict(district)</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>District Name</label>
+      <input type="text" id="villagedistrict" placeholder="e.g. Mysore, Pune, Coimbatore" onkeydown="if(event.key==='Enter') getVillages()"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="getVillages()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Get Villages
+    </button>
+    <div class="loading" id="village-loading"><div class="spinner"></div> Fetching villages...</div>
+    <div class="error-msg" id="village-error"></div>
+    <div class="result" id="village-result"></div>
+  </div>
+
+</div>
+
+<script>
+  const BASE = window.location.origin + '/odata/v4/map';
+
+  function setLoading(id, show) {
+    document.getElementById(id + '-loading').classList.toggle('show', show);
+  }
+
+  function setError(id, msg) {
+    const el = document.getElementById(id + '-error');
+    el.textContent = msg;
+    el.classList.toggle('show', !!msg);
+  }
+
+  function showResult(id, html) {
+    const el = document.getElementById(id + '-result');
+    el.innerHTML = html;
+    el.classList.add('show');
+  }
+
+  function ri(label, value) {
+    return `<div class="result-item">
+      <div class="result-item-label">${label}</div>
+      <div class="result-item-value">${value || '—'}</div>
+    </div>`;
+  }
+
+  function openMap() {
+    window.open('https://www.openstreetmap.org/#map=5/20.5937/78.9629', '_blank');
+  }
+
+  function openMapWithCoords(lat, lon) {
+    window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=13/${lat}/${lon}`, '_blank');
+  }
+
+  async function getLatLon() {
+    const city = document.getElementById('cityname').value.trim();
+    if (!city) { setError('latlon', 'Please enter a city name'); return; }
+    setError('latlon', '');
+    setLoading('latlon', true);
+    document.getElementById('latlon-result').classList.remove('show');
+    try {
+      const res = await fetch(`${BASE}/getlatitudeAndLongitude(cityname='${encodeURIComponent(city)}')`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed');
+      const v = data.value || data;
+      showResult('latlon', `
+        <div class="result-grid">
+          ${ri('Latitude', v.latitude)}
+          ${ri('Longitude', v.longitude)}
+        </div>
+        <button class="view-map-btn" onclick="openMapWithCoords(${v.latitude}, ${v.longitude})">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Map
+        </button>
+      `);
+    } catch(e) {
+      setError('latlon', 'Error: ' + e.message + '. Make sure cds watch is running.');
+    }
+    setLoading('latlon', false);
+  }
+
+  async function getLocationDetail() {
+    const addr = document.getElementById('address').value.trim();
+    if (!addr) { setError('detail', 'Please enter an address'); return; }
+    setError('detail', '');
+    setLoading('detail', true);
+    document.getElementById('detail-result').classList.remove('show');
+    try {
+      const res = await fetch(`${BASE}/getLocationInDetail(address='${encodeURIComponent(addr)}')`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed');
+      const v = data.value || data;
+      showResult('detail', `
+        <div class="result-address">${v.address || '—'}</div>
+        <div class="result-grid">
+          ${ri('Latitude', v.latitude)}
+          ${ri('Longitude', v.longitude)}
+          ${ri('Location', v.location)}
+          ${ri('District', v.district)}
+          ${ri('City', v.city)}
+          ${ri('State', v.state)}
+          ${ri('Pincode', v.pincode)}
+          ${ri('Country', v.country)}
+        </div>
+        <button class="view-map-btn" onclick="openMapWithCoords(${v.latitude}, ${v.longitude})">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Map
+        </button>
+      `);
+    } catch(e) { setError('detail', 'Error: ' + e.message); }
+    setLoading('detail', false);
+  }
+
+  async function getFromCoords() {
+    const lat = document.getElementById('lat').value;
+    const lon = document.getElementById('lon').value;
+    if (!lat || !lon) { setError('coord', 'Please enter both latitude and longitude'); return; }
+    setError('coord', '');
+    setLoading('coord', true);
+    document.getElementById('coord-result').classList.remove('show');
+    try {
+      const res = await fetch(`${BASE}/getAddressFromCoordinates(latitude=${lat},longitude=${lon})`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed');
+      const v = data.value || data;
+      showResult('coord', `
+        <div class="result-address">${v.address || '—'}</div>
+        <div class="result-grid">
+          ${ri('Location', v.location)}
+          ${ri('District', v.district)}
+          ${ri('City', v.city)}
+          ${ri('State', v.state)}
+          ${ri('Pincode', v.pincode)}
+          ${ri('Country', v.country)}
+        </div>
+        <button class="view-map-btn" onclick="openMapWithCoords(${lat}, ${lon})">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Map
+        </button>
+      `);
+    } catch(e) { setError('coord', 'Error: ' + e.message); }
+    setLoading('coord', false);
+  }
+
+  async function getDistricts() {
+    const state = document.getElementById('statename').value.trim();
+    if (!state) { setError('district', 'Please enter a state name'); return; }
+    setError('district', '');
+    setLoading('district', true);
+    document.getElementById('district-result').classList.remove('show');
+    try {
+      const res = await fetch(`${BASE}/getDistricts(state='${encodeURIComponent(state)}')`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed');
+      const items = data.value || [];
+      const chips = items.map(d => `<span class="chip">${d.name}</span>`).join('');
+      showResult('district', `
+        <div class="chips-count">${items.length} districts found in ${state}</div>
+        <div class="chips">${chips}</div>
+      `);
+    } catch(e) { setError('district', 'Error: ' + e.message); }
+    setLoading('district', false);
+  }
+
+  async function getCities() {
+    const district = document.getElementById('districtname').value.trim();
+    if (!district) { setError('city', 'Please enter a district name'); return; }
+    setError('city', '');
+    setLoading('city', true);
+    document.getElementById('city-result').classList.remove('show');
+    try {
+      const res = await fetch(`${BASE}/getCitiesByDistrict(district='${encodeURIComponent(district)}')`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed');
+      const items = data.value || [];
+      const chips = items.map(c =>
+        `<span class="chip">${c.name}${c.pincode ? `<span class="chip-pin">${c.pincode}</span>` : ''}</span>`
+      ).join('');
+      showResult('city', `
+        <div class="chips-count">${items.length} cities found in ${district}</div>
+        <div class="chips">${chips}</div>
+      `);
+    } catch(e) { setError('city', 'Error: ' + e.message); }
+    setLoading('city', false);
+  }
+
+  async function getVillages() {
+    const district = document.getElementById('villagedistrict').value.trim();
+    if (!district) { setError('village', 'Please enter a district name'); return; }
+    setError('village', '');
+    setLoading('village', true);
+    document.getElementById('village-result').classList.remove('show');
+    try {
+      const res = await fetch(`${BASE}/getVillagesByDistrict(district='${encodeURIComponent(district)}')`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed');
+      const items = data.value || [];
+      const chips = items.map(v => `<span class="chip">${v.name}</span>`).join('');
+      showResult('village', `
+        <div class="chips-count">${items.length} villages found in ${district}</div>
+        <div class="chips">${chips}</div>
+      `);
+    } catch(e) { setError('village', 'Error: ' + e.message); }
+    setLoading('village', false);
+  }
+</script>
+</body>
+</html>
