@@ -1,0 +1,30 @@
+{
+  "name": "translation-cap",
+  "version": "1.0.0",
+  "dependencies": {
+    "@sap-cloud-sdk/http-client": "^4.6.0",
+    "@sap/cds": "^9",
+    "@sap/xsenv": "^6.2.0",
+    "adm-zip": "^0.5.17",
+    "axios": "^1.15.1",
+    "docx": "^9.6.1",
+    "express": "^5.2.1",
+    "form-data": "^4.0.5",
+    "qs": "^6.15.1"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "start:hybrid": "cds serve --profile hybrid"
+  },
+  "cds": {
+    "requires": {
+      "my-translation-service": {
+        "kind": "rest"
+      }
+    }
+  },
+  "private": true
+}

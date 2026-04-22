@@ -1,0 +1,26 @@
+{
+  "requires": {
+    "[hybrid]": {
+      "my-translation-service": {
+        "credentials": {
+          "documenttranslation": {
+            "url": "https://document-translation.api.us10.translationhub.cloud.sap"
+          },
+          "softwaretranslation": {
+            "url": "https://software-translation.api.us10.translationhub.cloud.sap"
+          },
+          "uaa": {
+            "clientid": "sb-973e91c7-4f79-4077-8e7f-50070a469ab8!b613742|document-translation-us10!b1112",
+            "clientsecret": "19a703d1-293c-4a06-b990-73c4ade8d124$3ocJYUDVQ49O2m3bSspV6t7mayGsJ5GUt8RW1UWD-4I=",
+            "url": "https://c58cc7detrial.authentication.us10.hana.ondemand.com",
+            "identityzone": "c58cc7detrial",
+            "identityzoneid": "7813dfa9-a558-44c5-9841-67b3635f9e20",
+            "zoneid": "7813dfa9-a558-44c5-9841-67b3635f9e20",
+            "subaccountid": "7813dfa9-a558-44c5-9841-67b3635f9e20",
+            "xsappname": "973e91c7-4f79-4077-8e7f-50070a469ab8!b613742|document-translation-us10!b1112"
+          }
+        }
+      }
+    }
+  }
+}
