@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Document Translator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 36px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+  h2 {
+    font-size: 22px;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+  }
+  select, input[type=file] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 18px;
+    outline: none;
+    background: #fafafa;
+  }
+  select:focus { border-color: #4f6ef7; }
+  .row { display: flex; gap: 14px; }
+  .row > div { flex: 1; }
+  button {
+    width: 100%;
+    padding: 13px;
+    background: #4f6ef7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+  button:hover:not(:disabled) { background: #3a57d4; }
+  button:disabled { background: #aab4f0; cursor: not-allowed; }
+  .status {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+  }
+  .status.info { background: #eef1ff; color: #4f6ef7; border: 1px solid #c5ccf9; display: block; }
+  .status.success { background: #eafaf1; color: #1a7a45; border: 1px solid #a3d9b8; display: block; }
+  .status.error { background: #fff0f0; color: #c0392b; border: 1px solid #f5b7b1; display: block; }
+  .log {
+    margin-top: 14px;
+    background: #1e1e2e;
+    color: #a0a8c0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    font-family: monospace;
+    max-height: 140px;
+    overflow-y: auto;
+    display: none;
+  }
+  .log.show { display: block; }
+  .log-line { padding: 2px 0; }
+  .log-line.ok { color: #50fa7b; }
+  .log-line.err { color: #ff5555; }
+  .download-btn {
+    background: #27ae60;
+    margin-top: 10px;
+    display: none;
+  }
+  .download-btn:hover { background: #1e8449; }
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 14%;
+    right: 14%;
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 0;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 1;
+  }
+  .step-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #999;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-circle.active { background: #4f6ef7; color: white; }
+  .step-circle.done { background: #27ae60; color: white; }
+  .step-text { font-size: 11px; color: #999; }
+  .step-text.active { color: #4f6ef7; font-weight: 600; }
+  .step-text.done { color: #27ae60; }
+  .progress {
+    height: 6px;
+    background: #eee;
+    border-radius: 4px;
+    margin: 14px 0;
+    overflow: hidden;
+    display: none;
+  }
+  .progress.show { display: block; }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4f6ef7, #a78bfa);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>📄 Document Translator</h2>
+  <p class="subtitle">Translate your .docx files using SAP Translation Service</p>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step">
+      <div class="step-circle active" id="c1">1</div>
+      <div class="step-text active" id="t1">Upload</div>
+    </div>
+    <div class="step">
+      <div class="step-circle" id="c2">2</div>
+      <div class="step-text" id="t2">Translate</div>
+    </div>
+    <div class="step">
+      <div class="step-circle" id="c3">3</div>
+      <div class="step-text" id="t3">Download</div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div id="formSection">
+    <div class="row">
+      <div>
+        <label>Source Language</label>
+        <select id="sourceLang">
+          <option value="en">English</option>
+          <option value="de">German</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+          <option value="it">Italian</option>
+          <option value="pt">Portuguese</option>
+          <option value="zh">Chinese</option>
+          <option value="ja">Japanese</option>
+        </select>
+      </div>
+      <div>
+        <label>Target Language</label>
+        <select id="targetLang">
+          <option value="de">German</option>
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+          <option value="it">Italian</option>
+          <option value="pt">Portuguese</option>
+          <option value="zh">Chinese</option>
+          <option value="ja">Japanese</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Select Document (.docx)</label>
+    <input type="file" id="fileInput" accept=".docx,.doc,.txt"/>
+
+    <button id="translateBtn" onclick="startTranslation()" disabled>
+      Translate Document
+    </button>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress" id="progressWrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Status -->
+  <div class="status" id="statusBox"></div>
+
+  <!-- Download -->
+  <button class="download-btn" id="downloadBtn" onclick="triggerDownload()">
+    ⬇ Download Translated Document
+  </button>
+
+  <!-- Reset -->
+  <button id="resetBtn" style="background:#888;margin-top:10px;display:none;" onclick="resetAll()">
+    ↺ Translate Another
+  </button>
+
+  <!-- Log -->
+  <div class="log" id="logBox"></div>
+</div>
+
+<script>
+  // ── CONFIG ─────────────────────────────────────────────────────────────────
+  // Uses relative path - works when served from CAP at localhost:4004/index.html
+  const API = window.location.origin + '/translation';
+
+  let jobId = null;
+  let docId = null;
+  let resultBase64 = null;
+  let fileName = 'translated.docx';
+
+  // ── File input enable button ───────────────────────────────────────────────
+  document.getElementById('fileInput').addEventListener('change', function() {
+    document.getElementById('translateBtn').disabled = !this.files.length;
+  });
+
+  // ── Step helpers ───────────────────────────────────────────────────────────
+  function setStep(n) {
+    [1,2,3].forEach(i => {
+      const c = document.getElementById('c'+i);
+      const t = document.getElementById('t'+i);
+      c.className = 'step-circle' + (i < n ? ' done' : i === n ? ' active' : '');
+      t.className = 'step-text' + (i < n ? ' done' : i === n ? ' active' : '');
+      if (i < n) c.textContent = '✓';
+      else c.textContent = i;
+    });
+  }
+
+  function setProgress(pct) {
+    document.getElementById('progressWrap').classList.add('show');
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('statusBox');
+    el.textContent = msg;
+    el.className = 'status ' + type;
+  }
+
+  function addLog(msg, type) {
+    const box = document.getElementById('logBox');
+    box.classList.add('show');
+    const line = document.createElement('div');
+    line.className = 'log-line' + (type ? ' ' + type : '');
+    line.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  // ── Main flow ──────────────────────────────────────────────────────────────
+  async function startTranslation() {
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) return;
+
+    fileName = file.name;
+    const sourceLang = document.getElementById('sourceLang').value;
+    const targetLang = document.getElementById('targetLang').value;
+
+    // Lock UI
+    document.getElementById('translateBtn').disabled = true;
+    document.getElementById('fileInput').disabled = true;
+    setStep(2);
+    setProgress(10);
+    setStatus('Reading file...', 'info');
+    addLog('Reading: ' + file.name);
+
+    try {
+      // Read as base64
+      const contentB64 = await toBase64(file);
+      addLog('File encoded (' + (file.size / 1024).toFixed(1) + ' KB)');
+      setProgress(25);
+
+      // Step 1: Upload
+      setStatus('Uploading document...', 'info');
+      addLog('POST /uploadDocument');
+
+      const upRes = await fetch(API + '/uploadDocument', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          contentB64,
+          sourceLang,
+          targetLang
+        })
+      });
+
+      if (!upRes.ok) {
+        const e = await upRes.text();
+        throw new Error('Upload failed: ' + e);
+      }
+
+      const upData = await upRes.json();
+      jobId = upData.value;
+      addLog('Job ID: ' + jobId, 'ok');
+      setProgress(50);
+
+      // Step 2: Get Status
+      setStatus('Checking translation status...', 'info');
+      addLog('POST /getStatus');
+
+      const stRes = await fetch(API + '/getStatus', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId })
+      });
+
+      if (!stRes.ok) throw new Error('Status check failed');
+
+      const stData = await stRes.json();
+      const parsed = JSON.parse(stData.value);
+      addLog('Status: ' + parsed.status, 'ok');
+      setProgress(70);
+
+      if (!parsed.translatedDocuments || !parsed.translatedDocuments.length) {
+        throw new Error('No translated documents found');
+      }
+
+      docId = parsed.translatedDocuments[0].id;
+      addLog('Doc ID: ' + docId, 'ok');
+
+      // Step 3: Download
+      setStatus('Downloading translated file...', 'info');
+      addLog('POST /downloadResult');
+
+      const dlRes = await fetch(API + '/downloadResult', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docId })
+      });
+
+      if (!dlRes.ok) throw new Error('Download failed');
+
+      const dlData = await dlRes.json();
+      resultBase64 = dlData.value;
+      addLog('File ready!', 'ok');
+      setProgress(100);
+
+      // Done!
+      setStep(3);
+      setStatus('✓ Translation complete! Click below to download.', 'success');
+      document.getElementById('downloadBtn').style.display = 'block';
+      document.getElementById('resetBtn').style.display = 'block';
+      document.getElementById('formSection').style.display = 'none';
+
+    } catch (err) {
+      setStatus('Error: ' + err.message, 'error');
+      addLog('ERROR: ' + err.message, 'err');
+      document.getElementById('translateBtn').disabled = false;
+      document.getElementById('fileInput').disabled = false;
+      setStep(1);
+    }
+  }
+
+  // ── Download ───────────────────────────────────────────────────────────────
+  function triggerDownload() {
+    if (!resultBase64) return;
+    const bytes = Uint8Array.from(atob(resultBase64), c => c.charCodeAt(0));
+    const blob = new Blob([bytes], {
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName.replace('.docx', '_translated.docx');
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // ── Reset ──────────────────────────────────────────────────────────────────
+  function resetAll() {
+    jobId = docId = resultBase64 = null;
+    fileName = 'translated.docx';
+    document.getElementById('fileInput').value = '';
+    document.getElementById('fileInput').disabled = false;
+    document.getElementById('translateBtn').disabled = true;
+    document.getElementById('downloadBtn').style.display = 'none';
+    document.getElementById('resetBtn').style.display = 'none';
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('statusBox').className = 'status';
+    document.getElementById('progressWrap').classList.remove('show');
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('logBox').innerHTML = '';
+    document.getElementById('logBox').classList.remove('show');
+    setStep(1);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function toBase64(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+  }
+</script>
+</body>
+</html>
